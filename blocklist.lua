@@ -749,11 +749,11 @@ local blocks_and_textures = {
 		[128] = {"mccompat:double_plant_tsunflower",	"double_plant_sunflower_top.png"},
 		[129] = {"mccompat:double_plant_tsyringa",	"double_plant_syringa_top.png"},
 		[130] = {"mccompat:double_plant_tgrass",	"double_plant_grass_top.png"},
-		[131] = {"mccompat:double_plant_tfern",	"double_plant_fern_top.png"},
-		[132] = {"mccompat:double_plant_trose",	"double_plant_rose_top.png"},
+		[131] = {"mccompat:double_plant_tfern",		"double_plant_fern_top.png"},
+		[132] = {"mccompat:double_plant_trose",		"double_plant_rose_top.png"},
 		[133] = {"mccompat:double_plant_tpaeonia",	"double_plant_paeonia_top.png"},
 		}},
-		-- TODO 8: Top Half of any Large Plant; low three bits 0x7 are derived from the block below.
+		-- 0x8: Top Half of any Large Plant; low three bits 0x7 are derived from the block below.
 --	[176] = {TODO, "mccompat:standing_banner",			"Free-standing_Banner_Small.png"},
 --	[177] = {TODO, "mccompat:wall_banner",			"Wall-mounted_Banner_Small.png"},
 --	[178] = {TODO, "mccompat:daylight_detector_inverted",			"daylight_detector_inverted_top.png"},
@@ -1090,6 +1090,22 @@ mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2
 		else
 			return {"beds:bed_bottom", param2 }; --mc2mtFacedir(dir) };
 		end
+
+	-- large plants require two blocks
+	elseif( blockid==175 ) then
+		-- 0x8: Top Half of any Large Plant; low three bits 0x7 are derived from the block below.
+		if( get_bits( blockdata, {8} )>0 ) then
+			-- we need the data below in order to figure out what flower this actually is;
+			-- request the data
+			if( not(blockid2) or not( blockdata2 )) then
+				return { nil, nil, -1 };
+			end
+			-- this is the upper part...
+			return { blocknames[ blockid ].list[ blockdata2 + 128 ], 0 };
+		end
+		-- the lower part of the flower is easy
+		return { blocknames[ blockid ].list[ blockdata ], 0 };
+
 
 	-- doors need to be handled specially
 	elseif( blocknames[ blockid ].door ) then
