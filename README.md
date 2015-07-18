@@ -9,6 +9,10 @@ Missing:
 * dirt_with_grass, grass and leaves need to get green
 * torches are only created in one form
 * pistons, ladders etc. may not look correctly
+* water behaves diffrently in MT - beware of spills!
+* the anvil, wall and other nodes need nodeboxes
+* banners and signs seem to be popular; they ought to be added
+* trapdoors are not handled correctly
 
 Features:
 * creates compatibility nodes for many MC nodes
