@@ -1030,6 +1030,16 @@ local mc2mtFacedir = function(blockdata)
 	end
 end
 
+-- for ladder, furnace, chest, trapped chest
+local mc2mtFacedir3 = function( blockdata )
+	if(     dir==3 ) then return 2; -- south
+	elseif( dir==4 ) then return 0; -- west
+	elseif( dir==5 ) then return 1; -- east
+	-- Invalid values default to 2.
+	else return 3; end -- north
+end
+
+
 local mc2mtstairs = function( name, blockdata)
 	if blockdata >= 4 then
 		return {name.. "upside_down", mc2mtFacedir(blockdata - 4)}
@@ -1139,7 +1149,7 @@ mccompat.findMC2MTConversion = function(blockid, blockdata)
 
 		-- translate facedir...
 		elseif( conv.facedir ) then
-			return { conv.list[1], mc2mtFacedir(blockdata) };
+			return { conv.list[1], mc2mtFacedir3( get_bits( blockdata, {1,2,4})) };
 
 
 		elseif( conv.multi or #conv.list>1) then
