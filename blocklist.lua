@@ -1068,20 +1068,18 @@ mccompat.findMC2MTConversion = function(blockid, blockdata)
 	elseif( blockid==26 ) then -- bed
 		-- bit 0x4: empty/occupied (irrelevant for us)
 		local dir = 0;
-		if(     get_bits( blockdata, {1} )==1 ) then -- facing south
-			dir = 0;
-		elseif( get_bits( blockdata, {2} )==1 ) then -- facing west
-			dir = 1;
-		elseif( get_bits( blockdata, {3} )==1 ) then -- facing north
-			dir = 2;
-		elseif( get_bits( blockdata, {4} )==1 ) then -- facing east
-			dir = 3;
+		dir = get_bits( blockdata, {1,2} );
+		local param2 = 0;
+		if(     dir==0 ) then param2 = 2;
+		elseif( dir==1 ) then param2 = 3;
+		elseif( dir==2 ) then param2 = 0;
+		elseif( dir==3 ) then param2 = 1;
 		end
 		-- bit 0x8: when 0, foot of the bed; when 1, head of the bed
 		if( get_bits( blockdata, {8} )==0 ) then
-			return {"beds:bed_top",    mc2mtFacedir(dir) };
+			return {"beds:bed_top",    param2 }; --mc2mtFacedir(dir) };
 		else
-			return {"beds:bed_bottom", mc2mtFacedir(dir) };
+			return {"beds:bed_bottom", param2 }; --mc2mtFacedir(dir) };
 		end
 
 	-- doors need to be handled specially
