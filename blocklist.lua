@@ -955,14 +955,13 @@ for i,v in pairs(blocks_and_textures) do
 				doors.register_door("mccompat:door_"..mc_node_name, {
 					description = mc_node_name.." Door",
 					groups = {snappy=1,cracky=1,oddly_breakable_by_hand=3,door=1},
-					tiles_bottom = {mc_node_tiles.."_lower.png"},
-					tiles_top = {mc_node_tiles.."_upper.png"},
+					tiles_bottom = {mc_node_tiles.."_lower.png^[transformFX", mc_node_tiles.."_lower.png"},
+					tiles_top =    {mc_node_tiles.."_upper.png^[transformFX", mc_node_tiles.."_upper.png",},
 					sounds = default.node_sound_glass_defaults(),
 					sunlight = true,
 				})
 			end
-			-- TODO: find out the right door names
-			new_list[j] = "mccompat:door_"..mc_node_name; --.."_t_1";
+			new_list[j] = "mccompat:door_"..mc_node_name;
 			blocknames[i].door = 1;
 
 		elseif( typ==TRAPDOOR ) then
@@ -1051,7 +1050,7 @@ end
 
 
 -- returns {translated_node_name, translated_param2}
-mccompat.findMC2MTConversion = function(blockid, blockdata)
+mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2)
 	if(     blockid== 0) then
 		return {"air", 0};
 
@@ -1095,26 +1094,50 @@ mccompat.findMC2MTConversion = function(blockid, blockdata)
 	-- doors need to be handled specially
 	elseif( blocknames[ blockid ].door ) then
 
+		-- we need to request additional information
+		if( not( blockid2 ) or not( blockdata2 )) then
+			-- top half of the door?
+			if( get_bits( blockdata, {8})>0 ) then
+				return { nil, nil, -1 };
+			else
+				return { nil, nil,  1 };
+			end
+		end
+		-- both have to be the same door
+		if( blockid ~= blockid2 ) then
+			return {"error:wrong_other_node",0};
+		end
 		local name = blocknames[ blockid ].list[ 1 ];
+		local dir   = 0;
+		local hinge = 0;
+		local open  = 0;
 		-- 0x8: If this bit is set, this is the top half of a door (else the lower half).
 		if( get_bits( blockdata, {8})>0 ) then
-			if( get_bits( blockdata, {4})>0 ) then
-				return { name..'_t_2', 0};
-			else
-				return { name..'_t_1', 0};
-			end
+			name  = name..'_t';
+			-- the node below knows about facedir
+			dir   = get_bits( blockdata2, {1,2} );
+			-- hinge to the right or left?
+			hinge = get_bits( blockdata,  {1} );
+			-- the node below knows if the door is open
+			open  = get_bits( blockdata2, {4} );
 		else
 			name = name..'_b';
+			-- this node knows which facedir it has
+			dir   = get_bits( blockdata,  {1,2} );
+			-- ..but the node above knows where the hinge is...
+			hinge = get_bits( blockdata2,  {1} );
+			-- this node knows if the door is open
+			open = get_bits( blockdata,    {4} );
 		end
 
-		-- 0x4: If this bit is set, the door has swung counterclockwise around its hinge.
-		if( get_bits( blockdata, {4})>0 ) then
+
+--		-- TODO: open? 0x4: If this bit is set, the door has swung counterclockwise around its hinge.
+		if(hinge>0 ) then
 			name = name..'_2';
 		else
 			name = name..'_1';
 		end
 
-		local dir = get_bits( blockdata, {1,2} );
 		local param2 = 0;
 		if( dir==0 ) then
 			param2 = 3;
