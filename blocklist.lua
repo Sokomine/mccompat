@@ -180,6 +180,48 @@ local mccompat_typ_ladder = {
 	sounds = default.node_sound_wood_defaults(),
 }
 
+local mccompat_typ_sign_wall = {
+	description = "Sign wall",
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	walkable = false,
+	selection_box = {
+		type = "fixed",
+		fixed = { -8/16, -8/16,   3/16, 8/16, 8/16, 8/16  },
+	},
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{ -8/16, -4/16,   15/32, 8/16, 4/16,  6/16 },
+		}
+	},
+	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3},
+}
+
+local mccompat_typ_sign_standing = {
+	description = "Sign",
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	walkable = false,
+	selection_box = {
+		type = "fixed",
+		fixed = { -8/16, -8/16, -4/16, 8/16, 18/32, 4/16 },
+	},
+	node_box = {
+		type = "fixed",
+		fixed = {
+			-- sign
+			{ -8/16, -3/32, -1/16, 8/16, 18/32, 1/16 },
+			-- post
+			{ -1/32, -8/16, -1/32, 1/32, -3/32, 1/32 },
+		}
+	},
+	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3},
+}
 
 
 -- texture order: top, bottom, sides
@@ -438,14 +480,18 @@ local blocks_and_textures = {
 		{
 			light_source = 7
 		}},
-	 [63] = {FACEDIR,"default:sign_wall",		"Sign_TODO.png"},
+	-- TODO: needs 1.8.7.jar/assets/minecraft/textures/entity/sign.png
+	 [63] = {FACEDIR,"mccompat:standing_sign",	"planks_oak.png",
+		mccompat_typ_sign_standing},
 		-- here, we take the normal sign
 	 [64] = {DOOR,   "wooden_door",			"door_wood"},
 	 [65] = {FACEDIR,"mccompat:ladder",		"ladder.png",
 		mccompat_typ_ladder},
 	 [66] = {NORMAL, "default:rail",		"rail_normal.png"},
 	 [67] = {STAIR,  "cobblestone",			"cobblestone.png"},
-	 [68] = {FACEDIR,"default:sign_wall",		"Wall_Sign_TODO.png"}, 
+	-- TODO: needs 1.8.7.jar/assets/minecraft/textures/entity/sign.png
+	 [68] = {FACEDIR,"mccompat:wall_sign",		"planks_oak.png", 
+		mccompat_typ_sign_wall},
 		-- again: normal sign wall
 --	 [69] = {TODO, "mccompat:lever",			"lever.png"}, 
 		-- no idea what that is good for
@@ -1296,14 +1342,44 @@ mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2
 		if(     dir==3 ) then -- facing south
 			param2 = 5;
 		elseif( dir==4 ) then -- facing west
-			param2 = 4;
+			param2 = 3;
 		elseif( dir==5 ) then -- facing east
 			param2 = 2;
 		else -- facing north; default state
-			param2 = 3;
+			param2 = 4;
 		end
 		return { blocknames[ blockid ].list[1], param2 };
 
+	-- wall_sign
+	elseif( blockid==68 ) then
+		local dir = get_bits( blockdata, {1,2,4} );
+		local param2 = 0;
+		if(     dir==2 ) then -- facing north
+			param2 = 0;
+		elseif( dir==3 ) then -- facing south
+			param2 = 2;
+		elseif( dir==4 ) then -- facing west
+			param2 = 3;
+		elseif( dir==5 ) then -- facing east
+			param2 = 1;
+		end
+		return { blocknames[ blockid ].list[1], param2 };
+
+	elseif( blockid == 63 ) then
+		local dir = get_bits( blockdata, {1,2,4,8} );
+
+		-- Important: MC supports signs rotated by 45 degrees; the nodebox used in
+		-- mccompat does not support that; thus, the signs are rotated as seems fit
+		if(     dir==7  or dir==8  or dir==9 or dir==10) then -- north...
+			param2 = 0;
+		elseif( dir==15 or dir==0  or dir==1 or dir==2 ) then -- south...
+			param2 = 2;
+		elseif( dir==3  or dir==4  or dir==5 or dir==6) then -- west
+			param2 = 3;
+		elseif( dir==11 or dir==12 or dir==13 or dir==14) then -- east
+			param2 = 1;
+		end
+		return { blocknames[ blockid ].list[1], param2 };
 
 	else
 		local conv = blocknames[ blockid ];
