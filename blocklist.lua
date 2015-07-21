@@ -153,13 +153,30 @@ local mccompat_typ_anvil = {
 		fixed = {
 			{ -6/16, -8/16, -6/16, 6/16, -4/16, 6/16 },
 			{ -5/16, -4/16, -4/16, 5/16, -3/16, 4/16 },
-			{ -4/16, -2/16, -4/16, 4/16,  2/16, 2/16 },
+			{ -4/16, -3/16, -2/16, 4/16,  2/16, 2/16 },
 			{ -6/16,  2/16, -8/16, 6/16,  8/16, 8/16 },
 		}
 	},
 	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3},
 }
 
+-- the ladder has its own definition as well
+local mccompat_typ_ladder = {
+	description = "Ladder",
+	drawtype = "signlike",
+	paramtype = "light",
+	paramtype2 = "wallmounted",
+	sunlight_propagates = true,
+	walkable = false,
+	climbable = true,
+	is_ground_content = false,
+	selection_box = {
+		type = "wallmounted",
+	},
+	groups = {choppy=2,oddly_breakable_by_hand=3,flammable=2},
+	legacy_wallmounted = true,
+	sounds = default.node_sound_wood_defaults(),
+}
 
 
 
@@ -422,7 +439,8 @@ local blocks_and_textures = {
 	 [63] = {FACEDIR,"default:sign_wall",		"Sign_TODO.png"},
 		-- here, we take the normal sign
 	 [64] = {DOOR,   "wooden_door",			"door_wood"},
-	 [65] = {FACEDIR,"mccompat:ladder",		"ladder.png"},
+	 [65] = {FACEDIR,"mccompat:ladder",		"ladder.png",
+		mccompat_typ_ladder},
 	 [66] = {NORMAL, "default:rail",		"rail_normal.png"},
 	 [67] = {STAIR,  "cobblestone",			"cobblestone.png"},
 	 [68] = {FACEDIR,"default:sign_wall",		"Wall_Sign_TODO.png"}, 
@@ -1266,6 +1284,24 @@ mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2
 		-- relevance to the import
 		local dir = get_bits( blockdata, {1} );
 		return { blocknames[ blockid ].list[1], dir };
+
+	-- ladder
+	elseif( blockid==65 ) then
+
+		local dir = get_bits( blockdata, {1,2,4} );
+		local param2 = 0;
+		if(     dir==3 ) then -- facing south
+			param2 = 5;
+		elseif( dir==4 ) then -- facing west
+			param2 = 4;
+		elseif( dir==5 ) then -- facing east
+			param2 = 2;
+		else -- facing north; default state
+			param2 = 3;
+		end
+		return { blocknames[ blockid ].list[1], param2 };
+
+
 	else
 		local conv = blocknames[ blockid ];
 
