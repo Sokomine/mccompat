@@ -81,7 +81,7 @@ local mccompat_typ_glass = {
 local mccompat_typ_fence = {
 	description = "Fence",
 	drawtype = "fencelike",
-	tiles = {"default_wood.png"},
+--	tiles = {"default_wood.png"},
 	paramtype = "light",
 	sunlight_propagates = true,
 	is_ground_content = false,
@@ -119,8 +119,124 @@ local mccompat_typ_torch = {
         walkable = false,
         light_source = 13,
         groups = {choppy=2, dig_immediate=3, not_in_creative_inventory=1, torch=1},
+	is_ground_content = false,
 }
 
+local mccompat_typ_button = {
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	groups = {choppy=2,oddly_breakable_by_hand=2},
+	node_box = {
+		type = "fixed",
+			fixed = {
+				{ -3/16,-2/16,0.5-2/16, 3/16,2/16,0.5 },
+			},
+		},
+	is_ground_content = false,
+}
+
+
+-- water and lava...
+local mc_add_liquid = function( name, static_image, animated_image_flowing, animated_image_source, light )
+
+   minetest.register_node( "mccompat:"..name.."_flowing", {
+	description = "Flowing "..name,
+	drawtype = "flowingliquid",
+	tiles = static_image,
+	special_tiles = {
+		{
+			name = animated_image_flowing,
+			backface_culling = false,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 0.8, -- 3.3 for lava
+			},
+		},
+		{
+			name = animated_image_flowing,
+			backface_culling = true,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 0.8, -- 3.3 for lava
+			},
+		},
+	},
+	alpha = 160,
+	paramtype = "light",
+	paramtype2 = "flowingliquid",
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "flowing",
+	liquid_alternative_flowing = "mccompat:"..name.."_flowing",
+	liquid_alternative_source = "mccompat:"..name.."_source",
+	liquid_viscosity = 1,
+	post_effect_color = {a=120, r=30, g=60, b=90},
+	groups = {water=3, liquid=3, puts_out_fire=1, not_in_creative_inventory=1},
+	light_source = light, -- for lava
+   });
+
+
+   minetest.register_node( "mccompat:"..name.."_source", {
+	description = name.." source",
+	inventory_image = minetest.inventorycube( static_image),
+	drawtype = "liquid",
+	tiles = {
+		{
+			name = animated_image_source,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 2.0, -- 3.0 for lava
+			},
+		},
+	},
+	special_tiles = {
+		{
+			name = animated_image_source,
+			animation = {
+				type = "vertical_frames",
+				aspect_w = 16,
+				aspect_h = 16,
+				length = 2.0, -- 3.0 for lava
+			},
+			backface_culling = false,
+		},
+	},
+	alpha = 160,
+	paramtype = "light",
+	walkable = false,
+	pointable = false,
+	diggable = false,
+	buildable_to = true,
+	is_ground_content = false,
+	drop = "",
+	drowning = 1,
+	liquidtype = "source",
+	liquid_alternative_flowing = "mccompat:"..name.."_flowing",
+	liquid_alternative_source = "mccompat:"..name.."_source",
+	liquid_viscosity = 1,
+	liquid_renewable = false,
+	liquid_range = 2,
+	post_effect_color = {a=120, r=30, g=76, b=90},
+	groups = {water=3, liquid=3, puts_out_fire=1},
+	light_source = light, -- for lava
+   });
+end
+
+-- actually add water and lava
+mc_add_liquid( "water", "default_water.png", "water_flow.png", "water_still.png", nil );
+mc_add_liquid( "lava",  "default_lava.png",  "lava_flow.png",  "lava_still.png",  14 );
 
 
 -- texture order: top, bottom, sides
@@ -169,10 +285,10 @@ local blocks_and_textures = {
 		-- bit 0x8: set if ready to grow into a tree - irrelevant for us
 		}},
 	  [7] = {NORMAL, "mccompat:bedrock",		"bedrock.png"},
-	  [8] = {NORMAL, "default:water_flowing",	"water_flow.png"},
-	  [9] = {NORMAL, "default:water_source",	"Water_still.png"},
-	 [10] = {NORMAL, "default:lava_flowing",	"lava_flow.png"},
- 	 [11] = {NORMAL, "default:lava_source",		"lava_still.png"},
+	  [8] = {NORMAL, "mccompat:water_flowing",	"water_flow.png"},
+	  [9] = {NORMAL, "mccompat:water_source",	"water_still.png"},
+	 [10] = {NORMAL, "mccompat:lava_flowing",	"lava_flow.png"},
+ 	 [11] = {NORMAL, "mccompat:lava_source",	"lava_still.png"},
 	 [12] = {SELECT,{
 		[0] = {"mccompat:sand",			"sand.png"},
 		[1] = {"mccompat:red_sand",			"red_sand.png"},
@@ -401,7 +517,8 @@ local blocks_and_textures = {
 		mccompat_typ_torch},
 	 [76] = {NORMAL, "mccompat:redstone_torch",		"redstone_torch_on.png",
 		mccompat_typ_torch},
---	 [77] = {BUTTON, "mccompat:stone_button",	"stone.png"},
+	 [77] = {NORMAL, "mccompat:stone_button",	"stone.png",
+		mccompat_typ_button},
 	 [78] = {CARPET, "mccompat:snow_layer",	"snow.png"},
 		-- the snow is not really a pressure plate; it just has a similar shape
 		-- TODO: use default:snow ?
@@ -448,7 +565,7 @@ local blocks_and_textures = {
 		[15] = {"mccompat:stained_glass_black",	"glass_black.png"},
 		},
 		mccompat_typ_glass},
-	 [96] = {TRAPDOOR, "wood",				"planks_oak.png"},
+	 [96] = {TRAPDOOR, "wood",				"trapdoor.png"},
 	 [97] = {SELECT,{
 		[0] = {"mccompat:monster_egg_stone",		"stone.png"},
 		[1] = {"mccompat:monster_egg_cobblestone",	"cobblestone.png"},
@@ -571,7 +688,9 @@ local blocks_and_textures = {
 	[137] = {NORMAL, "mccompat:command_block",	"command_block.png"},
 	[138] = {NORMAL, "mccompat:beacon",		"beacon.png"},
 		-- looks as if it might require a complex nodebox
---	[139] = {TODO, "mccompat:cobblestone_wall",			"Cobblestone_Wall_TODO.png"},
+--	TODO: the wall needs something better..maybe diffrent nodeboxes similar to xpanes
+	[139] = {NORMAL,"mccompat:wall",		"cobblestone.png",
+		mccompat_typ_fence},
 		-- they would require a suitable nodebox
 	[140] = {PLANT,{ 
 		 [0] = {"mccompat:flower_pot_empty",	"flower_pot.png"},
@@ -611,7 +730,8 @@ local blocks_and_textures = {
 		[7] = {"mccompat:potatoes_3",	"potatoes_stage_3.png"},
 		},
 		{waving = 1}},
---	[143] = {BUTTON, "mccompat:wooden_button",	"planks_oak.png"},
+	[143] = {NORMAL, "mccompat:wooden_button",	"planks_oak.png",
+		mccompat_typ_button},
 --	[144] = {TODO, "mccompat:skull",			"Skeleton_Skull_TODO.png"},
 	[145] = {NORMAL, "cottages:anvil", 		"anvil_base_TODO.png"},
 --	[146] = {TODO, "mccompat:trapped_chest",			"Trapped_Chest_TODO.png"},
@@ -689,7 +809,7 @@ local blocks_and_textures = {
 	[164] = {STAIR,  "planks_big_oak",		"planks_big_oak.png"},
 	[165] = {NORMAL, "mccompat:slime",		"slime.png"},
 --	[166] = {TODO, "mccompat:barrier",			"Barrier_TODO.png"},
-	[167] = {TRAPDOOR, "iron",			"iron_block.png"},
+	[167] = {TRAPDOOR, "iron",			"iron_trapdoor.png"},
 	[168] = {SELECT,{
 		[0] = {"mccompat:prismarine",		"prismarine.png"},
 		[1] = {"mccompat:prismarine_bricks",	"prismarine_bricks.png"},
@@ -1030,7 +1150,7 @@ local mc2mtFacedir = function(blockdata)
 end
 
 -- for ladder, furnace, chest, trapped chest
-local mc2mtFacedir3 = function( blockdata )
+local mc2mtFacedir3 = function( dir )
 	if(     dir==3 ) then return 2; -- south
 	elseif( dir==4 ) then return 0; -- west
 	elseif( dir==5 ) then return 1; -- east
@@ -1166,6 +1286,54 @@ mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2
 		end
 		
 		return { name, param2 };
+
+	-- TRAPDOOR
+	elseif( blockid==96 or blockid==167) then
+
+		-- all these values are needed in order to actually determine the facedir value
+		local dir    = get_bits( blockdata, {1,2} );
+		-- TODO: this is not really handled by the trapdoor from default
+		local on_top = get_bits( blockdata, {8});
+
+		local param2 = dir;
+		if(     dir==0 ) then -- on west side
+			param2 = 0; 
+		elseif( dir==1 ) then -- on south side
+			param2 = 2;
+		elseif( dir==2 ) then -- on east side
+			param2 = 3;
+		elseif( dir==3 ) then -- on north side
+			param2 = 1;
+		end
+		-- the opened version is another type
+		if( get_bits( blockdata, {4} )) then
+			return { blocknames[ blockid ].list[1]..'_open', param2 };
+		else
+			return { blocknames[ blockid ].list[1], param2 };
+		end
+
+	-- BUTTON
+	elseif( blockid==77 or blockid==143 ) then
+		
+		local dir = get_bits( blockdata, {1,2,4} );
+		local param2 = 0;
+		if(     dir==0 ) then -- facing down
+			param2 = 6;
+		elseif( dir==5 ) then -- facing up
+			param2 = 4;
+		elseif( dir==1 ) then -- facing east
+			param2 = 1;
+		elseif( dir==2 ) then -- facing west
+			param2 = 3;
+		elseif( dir==3 ) then -- facing south
+			param2 = 2;
+		elseif( dir==4 ) then -- facing north
+			param2 = 0;
+		end
+
+		-- TODO: 0x8: if set, the button is active
+		return { blocknames[ blockid ].list[1], param2 };
+
 	else
 		local conv = blocknames[ blockid ];
 
