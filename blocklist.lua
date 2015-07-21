@@ -76,6 +76,8 @@ local mccompat_typ_glass = {
 	sunlight_propagates = true,
 	groups = {cracky=3,oddly_breakable_by_hand=3},
 	sounds = default.node_sound_glass_defaults(),
+	use_texture_alpha = true,
+	is_ground_content = false,
 }
 
 local mccompat_typ_fence = {
@@ -871,6 +873,7 @@ mccompat.add_pane = function( name, tiles)
 		tiles = tiles,
 		textures = {tiles,tiles,tiles,tiles},
 		drawtype = "airlike",
+--		drawtype = "glasslike_framed_optional",
 		paramtype = "light",
 		is_ground_content = false,
 		sunlight_propagates = true,
@@ -879,12 +882,12 @@ mccompat.add_pane = function( name, tiles)
 		diggable = false,
 		buildable_to = true,
 		air_equivalent = true,
+		use_texture_alpha = true,
 		sounds = default.node_sound_glass_defaults(),
 		groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3, pane=1},
 		recipe = {{"mccompat:unkown"}}
 	})
 end
-
 
 
 local mc_add_node = function( mc_node_name, defs_typ, defs_node, tiles )
