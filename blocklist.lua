@@ -136,6 +136,30 @@ local mccompat_typ_button = {
 	is_ground_content = false,
 }
 
+-- there's only one anvil, but it's better to have more complex node definitions in one place
+local mccompat_typ_anvil = {
+    	description = "Anvil",
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	walkable = true,
+	selection_box = {
+		type = "fixed",
+		fixed = { -6/16, -8/16, -8/16, 6/16,  8/16, 8/16 },
+	},
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{ -6/16, -8/16, -6/16, 6/16, -4/16, 6/16 },
+			{ -5/16, -4/16, -4/16, 5/16, -3/16, 4/16 },
+			{ -4/16, -2/16, -4/16, 4/16,  2/16, 2/16 },
+			{ -6/16,  2/16, -8/16, 6/16,  8/16, 8/16 },
+		}
+	},
+	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3},
+}
+
 
 
 
@@ -236,7 +260,7 @@ local blocks_and_textures = {
 		[0] = {"mccompat:sponge",		"sponge.png"},
 		[1] = {"mccompat:sponge_wet",		"sponge_wet.png"},
 		}},
-	 [20] = {NORMAL, "default:glass",		"glass.png",
+	 [20] = {NORMAL, "mccompat:glass",		"glass.png",
 		mccompat_typ_glass},
 	 [21] = {NORMAL, "mccompat:lapis_ore",		"lapis_ore.png"},
 	 [22] = {NORMAL, "mccompat:lapis_block",	"lapis_block.png"},
@@ -633,7 +657,8 @@ local blocks_and_textures = {
 	[143] = {NORMAL, "mccompat:wooden_button",	"planks_oak.png",
 		mccompat_typ_button},
 --	[144] = {TODO, "mccompat:skull",			"Skeleton_Skull_TODO.png"},
-	[145] = {NORMAL, "cottages:anvil", 		"anvil_base_TODO.png"},
+	[145] = {NORMAL, "mccompat:anvil", 		"anvil_base.png",
+		mccompat_typ_anvil},
 --	[146] = {TODO, "mccompat:trapped_chest",			"Trapped_Chest_TODO.png"},
 	[147] = {CARPET, "mccompat:light_weighted_pressure_plate",	"gold_block.png"},
 	[148] = {CARPET, "mccompat:heavy_weighted_pressure_plate",	"iron_block.png"},
@@ -1234,6 +1259,13 @@ mccompat.findMC2MTConversion = function(blockid, blockdata, blockid2, blockdata2
 		-- TODO: 0x8: if set, the button is active
 		return { blocknames[ blockid ].list[1], param2 };
 
+	-- anvil
+	elseif( blockid==145 ) then
+		-- the anvil can have north/south or east/west direction;
+		-- the damage states of the anvil are ignored as those are of no
+		-- relevance to the import
+		local dir = get_bits( blockdata, {1} );
+		return { blocknames[ blockid ].list[1], dir };
 	else
 		local conv = blocknames[ blockid ];
 
