@@ -186,8 +186,8 @@ xconnected.construct_node_box_data = function( node_box_list, center_node_box_li
 	-- now we have a t-crossing
 	for _,v in pairs( node_box_list ) do
 		-- mirror x
-		table.insert( res.c3, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[5]-0.5});
-		table.insert( res.c4, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[5]-0.5});
+		table.insert( res.c3, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5});
+		table.insert( res.c4, {v[4], v[2], v[3]-0.5,  v[1], v[5], v[6]-0.5});
 	end
 
 	-- ...and now a node which is connected to four neighbours
@@ -274,3 +274,37 @@ xconnected.register_wall = function( name, tiles )
 		selection_box_data
 		);
 end
+
+
+
+xconnected.register_fence = function( name, tiles )
+	local node_box_data = xconnected.construct_node_box_data(
+		-- one extension
+    		{{-0.06,  0.25, 0, 0.06, 0.4, 0.5},
+		 {-0.06, -0.15, 0, 0.06, 0,   0.5}},
+		-- the central part
+		{{-0.1, -0.5, -0.1, 0.1, 0.5, 0.1}},
+		-- neighbours on two opposide sides
+    		{{-0.06,  0.25, -0.5, 0.06, 0.4, 0.5},
+		 {-0.06, -0.15, -0.5, 0.06, 0,   0.5}});
+	-- only the central part acts as a selection box
+	local selection_box_data = xconnected.construct_node_box_data(
+		{},
+		{{-0.2, -0.5, -0.2, 0.2, 0.5, 0.2}},
+		{{-0.2, -0.5, -0.2, 0.2, 0.5, 0.2}});
+	xconnected.register( name,
+		{ 
+			description = name.." Wall",
+			textures = {tiles,tiles,tiles,tiles},
+			is_ground_content = false,
+			sunlight_propagates = true,
+			sounds = default.node_sound_stone_defaults(),
+			groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3, pane=1},
+		},
+		node_box_data,
+		selection_box_data
+		);
+end
+
+-- xfences can also be emulated
+--xconnected.register_fence('mccompat:fence', 'default_wood.png');
