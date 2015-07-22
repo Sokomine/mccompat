@@ -343,7 +343,7 @@ local blocks_and_textures = {
 	 [29] = {FACEDIR,"mccompat:sticky_piston",	{"piston_top_sticky.png","piston_bottom.png","side.png"}},
 		-- TODO: 0x6, 0x7: 6-sided piston
 		-- TODO: 0x8: when 1, piston is extended
-	 [30] = {GPANE,  "mccompat_web",		"web.png"},
+	 [30] = {GPANE,  "web",				"web.png"},
 	 [31] = {PLANT,{
 		[0] = {"mccompat:shrub",		"deadbush.png"},
 		[1] = {"mccompat:tallgrass",		"tallgrass.png"},
@@ -602,8 +602,8 @@ local blocks_and_textures = {
 
 		[15] = {"mccompat:red_mushroom_block_15",	"mushroom_block_skin_stem.png"},
 		}},
-	[101] = {GPANE,"mccompat_iron_bars",		"iron_bars.png"},
-	[102] = {GPANE,"mccompat_glass_pane",		"glass.png"},
+	[101] = {GPANE,  "iron_bars",			"iron_bars.png"},
+	[102] = {GPANE,  "glass_pane",			"glass.png"},
 	[103] = {NORMAL,"mccompat:melon_block",	{"melon_top.png","melon_top.png","melon_side.png"}},
 	[104] = {PLANT,  "mccompat:pumpkin_stem",	"pumpkin_stem_connected.png"},
 	[105] = {PLANT,  "mccompat:melon_stem",	"melon_stem_connected.png"},
@@ -678,9 +678,11 @@ local blocks_and_textures = {
 	[137] = {NORMAL, "mccompat:command_block",	"command_block.png"},
 	[138] = {NORMAL, "mccompat:beacon",		"beacon.png"},
 		-- looks as if it might require a complex nodebox
---	TODO: the wall needs something better..maybe diffrent nodeboxes similar to xpanes
-	[139] = {NORMAL,"mccompat:wall",		"cobblestone.png",
-		mccompat_typ_fence},
+	[139] = {WALL,{
+		 [0] = {"mccompat:wall",		"cobblestone.png"},
+		 [1] = {"mccompat:mossy_wall",		"cobblestone_mossy.png"},
+		},
+		mccompat_typ_normal},
 		-- they would require a suitable nodebox
 	[140] = {PLANT,{ 
 		 [0] = {"mccompat:flower_pot_empty",	"flower_pot.png"},
@@ -758,22 +760,22 @@ local blocks_and_textures = {
 		[15] = {"mccompat:stained_clay_black",	"hardened_clay_stained_black.png"},
 		}},
 	[160] = {GPANE, {
-		 [0] = {"mccompat_stained_glass_pane_white",	"glass_white.png"},
-		 [1] = {"mccompat_stained_glass_pane_orange",	"glass_orange.png"},
-		 [2] = {"mccompat_stained_glass_pane_magenta",	"glass_magenta.png"},
-		 [3] = {"mccompat_stained_glass_pane_light_blue","glass_light_blue.png"},
-		 [4] = {"mccompat_stained_glass_pane_yellow",	"glass_yellow.png"},
-		 [5] = {"mccompat_stained_glass_pane_lime",	"glass_lime.png"},
-		 [6] = {"mccompat_stained_glass_pane_pink",	"glass_pink.png"},
-		 [7] = {"mccompat_stained_glass_pane_gray",	"glass_gray.png"},
-		 [8] = {"mccompat_stained_glass_pane_silver",	"glass_silver.png"},
-		 [9] = {"mccompat_stained_glass_pane_cyan",	"glass_cyan.png"},
-		[10] = {"mccompat_stained_glass_pane_purple",	"glass_purple.png"},
-		[11] = {"mccompat_stained_glass_pane_blue",	"glass_blue.png"},
-		[12] = {"mccompat_stained_glass_pane_brown",	"glass_brown.png"},
-		[13] = {"mccompat_stained_glass_pane_green",	"glass_green.png"},
-		[14] = {"mccompat_stained_glass_pane_red",	"glass_red.png"},
-		[15] = {"mccompat_stained_glass_pane_black",	"glass_black.png"},
+		 [0] = {"stained_glass_pane_white",	"glass_white.png"},
+		 [1] = {"stained_glass_pane_orange",	"glass_orange.png"},
+		 [2] = {"stained_glass_pane_magenta",	"glass_magenta.png"},
+		 [3] = {"stained_glass_pane_light_blue","glass_light_blue.png"},
+		 [4] = {"stained_glass_pane_yellow",	"glass_yellow.png"},
+		 [5] = {"stained_glass_pane_lime",	"glass_lime.png"},
+		 [6] = {"stained_glass_pane_pink",	"glass_pink.png"},
+		 [7] = {"stained_glass_pane_gray",	"glass_gray.png"},
+		 [8] = {"stained_glass_pane_silver",	"glass_silver.png"},
+		 [9] = {"stained_glass_pane_cyan",	"glass_cyan.png"},
+		[10] = {"stained_glass_pane_purple",	"glass_purple.png"},
+		[11] = {"stained_glass_pane_blue",	"glass_blue.png"},
+		[12] = {"stained_glass_pane_brown",	"glass_brown.png"},
+		[13] = {"stained_glass_pane_green",	"glass_green.png"},
+		[14] = {"stained_glass_pane_red",	"glass_red.png"},
+		[15] = {"stained_glass_pane_black",	"glass_black.png"},
 		}},
 		-- those are glasspanes
 	[161] = {SELECT,{
@@ -885,7 +887,7 @@ local blocks_and_textures = {
 	[187] = {GATE,  "planks_acacia",	"planks_acacia.png"},
 	[188] = {NORMAL,"mccompat:planks_spruce",	"planks_spruce.png",
 		mccompat_typ_fence},
-	[189] = {NORMAL,"mccompat:birch_fence",		"planks_birche.png",
+	[189] = {NORMAL,"mccompat:birch_fence",		"planks_birch.png",
 		mccompat_typ_fence},
 	[190] = {NORMAL,"mccompat:jungle_fence",	"planks_jungle.png",
 		mccompat_typ_fence},
@@ -912,81 +914,7 @@ blocks_and_textures[1] = {SELECT,{
 
 
 
--- needs name, tiles, textures
-mccompat.add_pane = function( name, tiles)
-	xpanes.register_pane(name, {
-		description = name.." Pane",
-		tiles = tiles,
-		textures = {tiles,tiles,tiles,tiles},
-		drawtype = "airlike",
---		drawtype = "glasslike_framed_optional",
-		paramtype = "light",
-		is_ground_content = false,
-		sunlight_propagates = true,
-		walkable = false,
-		pointable = false,
-		diggable = false,
-		buildable_to = true,
-		air_equivalent = true,
-		use_texture_alpha = true,
-		sounds = default.node_sound_glass_defaults(),
-		groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3, pane=1},
-		recipe = {{"mccompat:unkown"}}
-	})
-end
 
--- the wall is very similar to a pane
-mccompat.add_pane_wall = function( name, tiles)
-	xpanes.register_pane(name, {
-		description = name.." Wall",
-		tiles = tiles,
-		textures = {tiles,tiles,tiles,tiles},
-		drawtype = "nodebox",
-		paramtype = "light",
-		is_ground_content = false,
-		sunlight_propagates = true,
-		walkable = false,
-		pointable = false,
-		diggable = false,
-		buildable_to = true,
-		air_equivalent = true,
-		sounds = default.node_sound_stone_defaults(),
-		groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3, pane=1},
-		recipe = {{"mccompat:unkown"}}
-	},{
-	-- common central part
-		{-4/16, -0.5, -4/16, 4/16, 0.5, 4/16 },
-	},{
-	-- collusion box common central part
-		{-0.25, -0.5, -0.25, 0.25, 0.5, 0.25 },
-	},{
-	-- half_boxes
-		{ 4/16, -0.5, -3/16, 0.5,  5/16, 3/16},
-		{-3/16, -0.5,  4/16, 3/16, 5/16, 0.5},
-		{-0.5,  -0.5, -3/16,-4/16, 5/16, 3/16},
-		{-3/16, -0.5, -0.5,  3/16, 5/16, -4/16}
-	},{
-	-- full boxes
-		{-0.5,  -0.5, -3/16, 0.5,  5/16, 3/16},
-		{-3/16, -0.5, -0.5,  3/16, 5/16, 0.5}
-	},{
-	-- half boxes - collusion boxes
-		{0,     -0.5, -0.2, 0.5,  5/16, 0.2},
-		{-0.2, -0.5, 0,     0.2,  5/16, 0.5},
-		{-0.5,  -0.5, -0.2, 0,    5/16, 0.2},
-		{-0.2, -0.5, -0.5,  0.2,  5/16, 0}
-	},{
-	-- full boxes - collusion boxes
-		{-0.5,  -0.5, -0.2, 0.5,  5/16, 0.2},
-		{-0.2, -0.5, -0.5,  0.2, 5/16, 0.5}
-	})
-end
-
-mccompat.add_pane_wall('mccompat:wall_cobble',      "cobblestone.png");
-mccompat.add_pane_wall('mccompat:wall_mossycobble', "cobblestone_mossy.png");
-mccompat.add_pane_wall('mccompat:wall_ccobble', "default_cobble.png");
-mccompat.add_pane_wall('mccompat:wall_stonebrick', "default_stone_brick.png");
-mccompat.add_pane_wall('mccompat:wall_brick', "default_brick.png");
 
 local mc_add_node = function( mc_node_name, defs_typ, defs_node, tiles )
 --print('ADDING '..tostring( mc_node_name ));
@@ -1146,8 +1074,12 @@ for i,v in pairs(blocks_and_textures) do
 
 		-- diffrent panes
 		elseif( typ==GPANE ) then
-			mccompat.add_pane( mc_node_name, mc_node_tiles );
-			new_list[j] = "xpanes:"..mc_node_name;
+			xconnected.register_pane( "mccompat:"..mc_node_name, mc_node_tiles );
+			new_list[j] = "mccompat:"..mc_node_name..'_c4';
+
+		elseif( typ==WALL ) then
+			xconnected.register_wall( mc_node_name, mc_node_tiles );
+			new_list[j] = mc_node_name.."_c4";
 		end
 
 		blocknames[i].list = new_list;
