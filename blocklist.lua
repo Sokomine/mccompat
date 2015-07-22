@@ -30,6 +30,7 @@ local FACEDIR= 10;
 local BED    = 11;
 -- implace facedir; 0x8 indicates if the button is active (irrelevant for us)
 --local BUTTON = 12;
+local WALL   = 13;
 
 
 -- basic node definitions for the diffrent types
