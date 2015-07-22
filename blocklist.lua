@@ -935,6 +935,58 @@ mccompat.add_pane = function( name, tiles)
 	})
 end
 
+-- the wall is very similar to a pane
+mccompat.add_pane_wall = function( name, tiles)
+	xpanes.register_pane(name, {
+		description = name.." Wall",
+		tiles = tiles,
+		textures = {tiles,tiles,tiles,tiles},
+		drawtype = "nodebox",
+		paramtype = "light",
+		is_ground_content = false,
+		sunlight_propagates = true,
+		walkable = false,
+		pointable = false,
+		diggable = false,
+		buildable_to = true,
+		air_equivalent = true,
+		sounds = default.node_sound_stone_defaults(),
+		groups = {snappy=2, cracky=3, oddly_breakable_by_hand=3, pane=1},
+		recipe = {{"mccompat:unkown"}}
+	},{
+	-- common central part
+		{-4/16, -0.5, -4/16, 4/16, 0.5, 4/16 },
+	},{
+	-- collusion box common central part
+		{-0.25, -0.5, -0.25, 0.25, 0.5, 0.25 },
+	},{
+	-- half_boxes
+		{ 4/16, -0.5, -3/16, 0.5,  5/16, 3/16},
+		{-3/16, -0.5,  4/16, 3/16, 5/16, 0.5},
+		{-0.5,  -0.5, -3/16,-4/16, 5/16, 3/16},
+		{-3/16, -0.5, -0.5,  3/16, 5/16, -4/16}
+	},{
+	-- full boxes
+		{-0.5,  -0.5, -3/16, 0.5,  5/16, 3/16},
+		{-3/16, -0.5, -0.5,  3/16, 5/16, 0.5}
+	},{
+	-- half boxes - collusion boxes
+		{0,     -0.5, -0.2, 0.5,  5/16, 0.2},
+		{-0.2, -0.5, 0,     0.2,  5/16, 0.5},
+		{-0.5,  -0.5, -0.2, 0,    5/16, 0.2},
+		{-0.2, -0.5, -0.5,  0.2,  5/16, 0}
+	},{
+	-- full boxes - collusion boxes
+		{-0.5,  -0.5, -0.2, 0.5,  5/16, 0.2},
+		{-0.2, -0.5, -0.5,  0.2, 5/16, 0.5}
+	})
+end
+
+mccompat.add_pane_wall('mccompat:wall_cobble',      "cobblestone.png");
+mccompat.add_pane_wall('mccompat:wall_mossycobble', "cobblestone_mossy.png");
+mccompat.add_pane_wall('mccompat:wall_ccobble', "default_cobble.png");
+mccompat.add_pane_wall('mccompat:wall_stonebrick', "default_stone_brick.png");
+mccompat.add_pane_wall('mccompat:wall_brick', "default_brick.png");
 
 local mc_add_node = function( mc_node_name, defs_typ, defs_node, tiles )
 --print('ADDING '..tostring( mc_node_name ));
