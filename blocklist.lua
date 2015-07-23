@@ -1,7 +1,19 @@
 
+local SHADE = "77AB2F:64";
+SHADE = "66CC11:128"; --96";
 
-local TEXTURE_GRASS = "grass_top.png^[colorize:#00ff00:64";
-TEXTURE_GRASS = "default_grass.png"; -- TODO
+local TEXTURE_GRASS      = "grass_top.png^[colorize:#"..SHADE;
+-- for the grass side,  grass_side_overlay.png plus colorization might be used
+local TEXTURE_GRASS_SIDE = "grass_side.png";
+local TEXTURE_FOILAGE = "^[colorize:#"..SHADE;
+local TEXTURE_LEAVES  = TEXTURE_FOILAGE;
+
+-- unused textures which would need colorization:
+--grass_side_overlay.png
+--double_plant_top.png
+--double_plant_bottom.png
+--melon_stem_disconnected.png
+--pumpkin_stem_disconnected.png
 
 
 -- a normal block; nothing special
@@ -240,7 +252,7 @@ local blocks_and_textures = {
 		[6] = {"mccompat:polished_andesite",	"stone_andesite_smooth.png"},
 		}},
 --]]
-	  [2] = {NORMAL, "mccompat:grass",		{TEXTURE_GRASS,"dirt.png","grass_side.png"}},
+	  [2] = {NORMAL, "mccompat:grass",		{TEXTURE_GRASS,"dirt.png",TEXTURE_GRASS_SIDE}},
 	  [3] = {SELECT,{
 		[0] = {"mccompat:dirt",			"dirt.png"},
 		[1] = {"mccompat:coarse_dirt",		"coarse_dirt.png"},
@@ -299,22 +311,22 @@ local blocks_and_textures = {
 
 	
 	 [18] = {SELECT,{
-		 [0] = {"mccompat:leaves_oak",		"leaves_oak.png"},
-		 [1] = {"mccompat:leaves_spruce",	"leaves_spruce.png"},
-		 [2] = {"mccompat:leaves_birch",	"leaves_birch.png"},
-		 [3] = {"mccompat:leaves_jungle",	"leaves_jungle.png"},
-		 [4] = {"mccompat:leaves_oak",		"leaves_oak.png"},
-		 [5] = {"mccompat:leaves_spruce",	"leaves_spruce.png"},
-		 [6] = {"mccompat:leaves_birch",	"leaves_birch.png"},
-		 [7] = {"mccompat:leaves_jungle",	"leaves_jungle.png"},
-		 [8] = {"mccompat:leaves_oak",		"leaves_oak.png"},
-		 [9] = {"mccompat:leaves_spruce",	"leaves_spruce.png"},
-		[10] = {"mccompat:leaves_birch",	"leaves_birch.png"},
-		[11] = {"mccompat:leaves_jungle",	"leaves_jungle.png"},
-		[12] = {"mccompat:leaves_oak",		"leaves_oak.png"},
-		[13] = {"mccompat:leaves_spruce",	"leaves_spruce.png"},
-		[14] = {"mccompat:leaves_birch",	"leaves_birch.png"},
-		[15] = {"mccompat:leaves_jungle",	"leaves_jungle.png"},
+		 [0] = {"mccompat:leaves_oak",		"leaves_oak.png"..TEXTURE_LEAVES},
+		 [1] = {"mccompat:leaves_spruce",	"leaves_spruce.png"..TEXTURE_LEAVES},
+		 [2] = {"mccompat:leaves_birch",	"leaves_birch.png"..TEXTURE_LEAVES},
+		 [3] = {"mccompat:leaves_jungle",	"leaves_jungle.png"..TEXTURE_LEAVES},
+		 [4] = {"mccompat:leaves_oak",		"leaves_oak.png"..TEXTURE_LEAVES},
+		 [5] = {"mccompat:leaves_spruce",	"leaves_spruce.png"..TEXTURE_LEAVES},
+		 [6] = {"mccompat:leaves_birch",	"leaves_birch.png"..TEXTURE_LEAVES},
+		 [7] = {"mccompat:leaves_jungle",	"leaves_jungle.png"..TEXTURE_LEAVES},
+		 [8] = {"mccompat:leaves_oak",		"leaves_oak.png"..TEXTURE_LEAVES},
+		 [9] = {"mccompat:leaves_spruce",	"leaves_spruce.png"..TEXTURE_LEAVES},
+		[10] = {"mccompat:leaves_birch",	"leaves_birch.png"..TEXTURE_LEAVES},
+		[11] = {"mccompat:leaves_jungle",	"leaves_jungle.png"..TEXTURE_LEAVES},
+		[12] = {"mccompat:leaves_oak",		"leaves_oak.png"..TEXTURE_LEAVES},
+		[13] = {"mccompat:leaves_spruce",	"leaves_spruce.png"..TEXTURE_LEAVES},
+		[14] = {"mccompat:leaves_birch",	"leaves_birch.png"..TEXTURE_LEAVES},
+		[15] = {"mccompat:leaves_jungle",	"leaves_jungle.png"..TEXTURE_LEAVES},
 		-- there are duplicates due to decay/check decay, which is not relevant here
 		},
 		mccompat_typ_leaves },
@@ -347,8 +359,8 @@ local blocks_and_textures = {
 	 [30] = {GPANE,  "web",				"web.png"},
 	 [31] = {PLANT,{
 		[0] = {"mccompat:shrub",		"deadbush.png"},
-		[1] = {"mccompat:tallgrass",		"tallgrass.png"},
-		[2] = {"mccompat:fern",     		"fern.png"},
+		[1] = {"mccompat:tallgrass",		"tallgrass.png"..TEXTURE_FOILAGE},
+		[2] = {"mccompat:fern",     		"fern.png"..TEXTURE_FOILAGE},
 		},
 		{waving = 1}},
 		-- TODO: colorize in green?
@@ -605,15 +617,17 @@ local blocks_and_textures = {
 		}},
 	[101] = {GPANE,  "iron_bars",			"iron_bars.png"},
 	[102] = {GPANE,  "glass_pane",			"glass.png"},
-	[103] = {NORMAL,"mccompat:melon_block",	{"melon_top.png","melon_top.png","melon_side.png"}},
-	[104] = {PLANT,  "mccompat:pumpkin_stem",	"pumpkin_stem_connected.png"},
-	[105] = {PLANT,  "mccompat:melon_stem",	"melon_stem_connected.png"},
+	[103] = {NORMAL, "mccompat:melon_block",	{"melon_top.png","melon_top.png","melon_side.png"}},
+	[104] = {PLANT,  "mccompat:pumpkin_stem",	"pumpkin_stem_connected.png"..TEXTURE_FOILAGE},
+	[105] = {PLANT,  "mccompat:melon_stem",		"melon_stem_connected.png"..TEXTURE_FOILAGE},
 	[106] = {PLANT,  "mccompat:vine",		"vine.png"},
 	[107] = {GATE,   "planks_oak",			"planks_oak.png"},
 	[108] = {STAIR,  "brick_block",			"brick.png"},
 	[109] = {STAIR,  "stonebrick",			"stone_brick.png"},
 	[110] = {NORMAL, "mccompat:mycelium",		{"mycelium_top.png","dirt.png","dirt.png^mycelium_side.png"}},
-	[111] = {PLANT,  "mccompat:waterlily",		"waterlily.png"},
+	-- the waterlily is a rather flat plant
+	[111] = {PLANT,  "mccompat:waterlily",		"waterlily.png"..TEXTURE_FOILAGE,
+		{ drawtype = "signlike"}},
 	[112] = {NORMAL, "mccompat:nether_brick",	"nether_brick.png"},
 	[113] = {NORMAL, "mccompat:nether_brick_fence","nether_brick.png",
 		mccompat_typ_fence},
@@ -780,14 +794,14 @@ local blocks_and_textures = {
 		}},
 		-- those are glasspanes
 	[161] = {SELECT,{
-		 [0] = {"mccompat:leaves_acacia",	"leaves_acacia.png"},
-		 [1] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"},
-		 [4] = {"mccompat:leaves_acacia",	"leaves_acacia.png"},
-		 [5] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"},
-		 [8] = {"mccompat:leaves_acacia",	"leaves_acacia.png"},
-		 [9] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"},
-		 [12] = {"mccompat:leaves_acacia",	"leaves_acacia.png"},
-		 [13] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"},
+		 [0] = {"mccompat:leaves_acacia",	"leaves_acacia.png"..TEXTURE_LEAVES},
+		 [1] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"..TEXTURE_LEAVES},
+		 [4] = {"mccompat:leaves_acacia",	"leaves_acacia.png"..TEXTURE_LEAVES},
+		 [5] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"..TEXTURE_LEAVES},
+		 [8] = {"mccompat:leaves_acacia",	"leaves_acacia.png"..TEXTURE_LEAVES},
+		 [9] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"..TEXTURE_LEAVES},
+		 [12] = {"mccompat:leaves_acacia",	"leaves_acacia.png"..TEXTURE_LEAVES},
+		 [13] = {"mccompat:leaves_big_oak",	"leaves_big_oak.png"..TEXTURE_LEAVES},
 		},
 		mccompat_typ_leaves },
 		-- there are duplicates due to decay/check decay, which is not relevant here
@@ -856,14 +870,14 @@ local blocks_and_textures = {
 	[175] = {PLANT,{
 		[0] = {"mccompat:double_plant_sunflower","double_plant_sunflower_bottom.png"},
 		[1] = {"mccompat:double_plant_syringa","double_plant_syringa_bottom.png"},
-		[2] = {"mccompat:double_plant_grass",	"double_plant_grass_bottom.png"},
-		[3] = {"mccompat:double_plant_fern",	"double_plant_fern_bottom.png"},
+		[2] = {"mccompat:double_plant_grass",	"double_plant_grass_bottom.png"..TEXTURE_FOILAGE},
+		[3] = {"mccompat:double_plant_fern",	"double_plant_fern_bottom.png"..TEXTURE_FOILAGE},
 		[4] = {"mccompat:double_plant_rose",	"double_plant_rose_bottom.png"},
 		[5] = {"mccompat:double_plant_paeonia","double_plant_paeonia_bottom.png"},
 		[128] = {"mccompat:double_plant_tsunflower",	"double_plant_sunflower_top.png"},
 		[129] = {"mccompat:double_plant_tsyringa",	"double_plant_syringa_top.png"},
-		[130] = {"mccompat:double_plant_tgrass",	"double_plant_grass_top.png"},
-		[131] = {"mccompat:double_plant_tfern",		"double_plant_fern_top.png"},
+		[130] = {"mccompat:double_plant_tgrass",	"double_plant_grass_top.png"..TEXTURE_FOILAGE},
+		[131] = {"mccompat:double_plant_tfern",		"double_plant_fern_top.png"..TEXTURE_FOILAGE},
 		[132] = {"mccompat:double_plant_trose",		"double_plant_rose_top.png"},
 		[133] = {"mccompat:double_plant_tpaeonia",	"double_plant_paeonia_top.png"},
 		}},
