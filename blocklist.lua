@@ -501,8 +501,8 @@ local blocks_and_textures = {
 		[6] = {"mccompat:farmland_dry",	{"farmland_dry.png","dirt.png"}},
 		[7] = {"mccompat:farmland_wet",	{"farmland_wet.png","dirt.png"}},
 		}},
-	 [61] = {FACEDIR,"mccompat:furnace",		{"furnace_top.png","furnace_top.png","furnace_side.png","furance_side.png","furance_side.png","furnace_front_off.png"}},
-	 [62] = {FACEDIR,"mccompat:lit_furnace",	{"furnace_top.png","furnace_top.png","furnace_side.png","furance_side.png","furance_side.png","furnace_front_on.png"},
+	 [61] = {FACEDIR,"mccompat:furnace",		{"furnace_top.png","furnace_top.png","furnace_side.png","furnace_side.png","furnace_side.png","furnace_front_off.png"}},
+	 [62] = {FACEDIR,"mccompat:lit_furnace",	{"furnace_top.png","furnace_top.png","furnace_side.png","furnace_side.png","furnace_side.png","furnace_front_on.png"},
 		{
 			light_source = 7
 		}},
