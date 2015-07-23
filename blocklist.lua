@@ -137,6 +137,21 @@ local mccompat_typ_torch = {
 	is_ground_content = false,
 }
 
+-- fire
+local mccompat_typ_fire = {
+	drawtype = "firelike",
+	tiles = {{
+			name="fire_layer_0.png",
+			animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=1},
+		}},
+	inventory_image = "fire_basic_flame.png",
+	light_source = 14,
+	groups = {igniter=2,dig_immediate=3},
+	drop = '',
+	walkable = false,
+	buildable_to = true,
+}
+
 local mccompat_typ_button = {
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -444,9 +459,7 @@ local blocks_and_textures = {
 	 [50] = {NORMAL, "mccompat:torch",		{"torch_on.png","torch_on.png","torch_on.png","torch_on.png"},
 		mccompat_typ_torch},
 	 [51] = {PLANT,  "mccompat:fire",		"fire_layer_0.png",
-		{
-			light_source = 15
-		}},
+		mccompat_typ_fire},
 	 [52] = {NORMAL, "mccompat:mob_spawner",	"mob_spawner.png",
 		mccompat_typ_glass},
 	 [53] = {STAIR, "planks_oak",			"planks_oak.png"},
