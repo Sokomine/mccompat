@@ -251,6 +251,21 @@ local mccompat_typ_sign_standing = {
 	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3},
 }
 
+-- mc uses a different system here...but that of mt is nicer
+-- (mc has no t-crossings or crossing, but instead sloped curves)
+local mccompat_typ_rail = {
+	drawtype = "raillike",
+	paramtype = "light",
+	sunlight_propagates = true,
+	walkable = false,
+	is_ground_content = false,
+	selection_box = {
+		type = "fixed",
+		fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
+	},
+	groups = {bendy=2,dig_immediate=2,attached_node=1,connect_to_raillike=minetest.raillike_group("rail")}
+}
+
 
 -- texture order: top, bottom, sides
 local blocks_and_textures = {
@@ -364,11 +379,11 @@ local blocks_and_textures = {
 		[0] = {"mccompat:bed_feet",		{"bed_feet_top.png","planks_oak.png","bed_feet_side.png","bed_feet_end.png","bed_feet_side.png","bed_feet_end.png"}},
 		[128] = {"mccompat:bed_head",		{"bed_head_top.png","planks_oak.png","bed_head_side.png","bed_head_end.png","bed_head_side.png","bed_head_end.png"}},
 		}},
---	 [27] = {RAIL,  "mccompat:golden_rail",	{"rail_golden.png","rail_golden_turned.png"}},
-	 [27] = {NORMAL,"default:rail",			{"rail_golden.png","rail_golden_turned.png"}},
---	 [28] = {RAIL,  "mccompat:detector_rail",	"rail_detector.png"},
-	 [28] = {NORMAL,"default:rail",			"rail_detector.png"},
-	 [29] = {FACEDIR,"mccompat:sticky_piston",	{"piston_top_sticky.png","piston_bottom.png","side.png"}},
+	 [27] = {RAIL,  "mccompat:golden_rail",		"rail_golden.png",
+		mccompat_typ_rail},
+	 [28] = {RAIL,  "mccompat:detector_rail",	"rail_detector.png",
+		mccompat_typ_rail},
+	 [29] = {FACEDIR,"mccompat:sticky_piston",	{"piston_top_sticky.png","piston_bottom.png","piston_side.png"}},
 		-- TODO: 0x6, 0x7: 6-sided piston
 		-- TODO: 0x8: when 1, piston is extended
 	 [30] = {GPANE,  "web",				"web.png"},
@@ -378,11 +393,10 @@ local blocks_and_textures = {
 		[2] = {"mccompat:fern",     		"fern.png"..TEXTURE_FOILAGE},
 		},
 		{waving = 1}},
-		-- TODO: colorize in green?
 	 [32] = {PLANT,  "mccompat:deadbush",		"deadbush.png"},
-	 [33] = {FACEDIR,"mccompat:piston",		{"piston_top_normal.png","piston_bottom.png","side.png"}},
+	 [33] = {FACEDIR,"mccompat:piston",		{"piston_top_normal.png","piston_bottom.png","piston_side.png"}},
 		-- TODO: special values same as for sticky piston
-	 [34] = {FACEDIR, "mccompat:piston_head",	"piston_TODO.png"},
+	 [34] = {CARPET, "mccompat:piston_head",	"piston_top_normal.png"},
 		-- 0x8: 1: sticky head; 0: normal head
 		-- TODO: this needs a nodebox
 	 [35] = {SELECT,{
@@ -463,20 +477,11 @@ local blocks_and_textures = {
 	 [52] = {NORMAL, "mccompat:mob_spawner",	"mob_spawner.png",
 		mccompat_typ_glass},
 	 [53] = {STAIR, "planks_oak",			"planks_oak.png"},
-	 [54] = {FACEDIR, "mccompat:chest",		{"default_chest_top.png","default_chest_bottom.png","default_chest_side.png","default_chest_side.png","default_chest_side.png","default_chest_front.png"}},
+	 [54] = {FACEDIR, "mccompat:chest",		{"default_chest_top.png","default_chest_top.png","default_chest_side.png","default_chest_side.png","default_chest_side.png","default_chest_front.png"}},
 		-- TODO: the chest texture is stored elsewhere
-	 [55] = {NORMAL, "mccompat:redstone_wire",	{"redstone_dust_line.png","redstone_dust_line.png","redstone_dust_rail.png","redstone_dust_cros.png"}},
-		{
-			drawtype = "raillike",
-			paramtype = "light",
-			sunlight_propagates = true,
-			walkable = false,
-			selection_box = {
-				type = "fixed",
-				fixed = {-1/2, -1/2, -1/2, 1/2, -1/2+1/16, 1/2},
-			},
-			groups = {bendy=2,dig_immediate=2,attached_node=1,connect_to_raillike=minetest.raillike_group("rail")},
-		},
+		-- TODO: there do not seem to be curves or t-sections or anything
+	 [55] = {NORMAL, "mccompat:redstone_wire",	{"redstone_dust_line.png^[transform1","redstone_dust_cross.png","redstone_dust_cross.png","redstone_dust_cross.png"},
+		mccompat_typ_rail},
 	 [56] = {NORMAL, "mccompat:diamond_ore",	"diamond_ore.png"},
 	 [57] = {NORMAL, "mccompat:diamond_block",	"diamond_block.png"},
 	 [58] = {FACEDIR,"mccompat:crafting_table",	{"crafting_table_top.png","crafting_table_top.png","crafting_table_side.png","crafting_table_side.png","crafting_table_side.png","crafting_table_front.png"}},
@@ -513,7 +518,8 @@ local blocks_and_textures = {
 	 [64] = {DOOR,   "wooden_door",			"door_wood"},
 	 [65] = {FACEDIR,"mccompat:ladder",		"ladder.png",
 		mccompat_typ_ladder},
-	 [66] = {NORMAL, "default:rail",		"rail_normal.png"},
+	 [66] = {RAIL,   "mccompat:rail",		"rail_normal.png",
+		mccompat_typ_rail},
 	 [67] = {STAIR,  "cobblestone",			"cobblestone.png"},
 	-- TODO: needs 1.8.7.jar/assets/minecraft/textures/entity/sign.png
 	 [68] = {FACEDIR,"mccompat:wall_sign",		"planks_oak.png", 
@@ -546,7 +552,7 @@ local blocks_and_textures = {
 	 [84] = {FACEDIR,"mccompat:jukebox",		{"jukebox_top.png","jukebox_top.png","jukebox_side.png"}},
 	 [85] = {NORMAL, "mccompat:fence",		"planks_oak.png",
 		mccompat_typ_fence},
-	 [86] = {FACEDIR, "mccompat:pumpkin",		{"pumpkin_top.png","pumpkin_bottom.png","pumpkin_face_off.png","pumpkin_side.png"}},
+	 [86] = {FACEDIR, "mccompat:pumpkin",		{"pumpkin_top.png","pumpkin_top.png","pumpkin_face_off.png","pumpkin_side.png"}},
 	 [87] = {NORMAL, "mccompat:netherrack",	"netherrack.png"},
 	 [88] = {NORMAL, "mccompat:soul_sand",		"soul_sand.png"},
 	 [89] = {NORMAL,  "mccompat:glowstone",	"glowstone.png",
@@ -554,7 +560,7 @@ local blocks_and_textures = {
 			light_source = 15
 		}},
 	 [90] = {"mccompat:portal",			"portal.png"},
-	 [91] = {FACEDIR, "mccompat:lit_pumpkin",	{"pumpkin_top.png","pumpkin_bottom.png","pumpkin_face_on.png","pumpkin_side.png"},
+	 [91] = {FACEDIR, "mccompat:lit_pumpkin",	{"pumpkin_top.png","pumpkin_top.png","pumpkin_face_on.png","pumpkin_side.png"},
 		{
 			light_source = 15
 		}},
@@ -767,7 +773,8 @@ local blocks_and_textures = {
 		-- requires a nodebox
 	[155] = {NORMAL, "mccompat:quartz_block",	{"quartz_block_top.png","quartz_block_top.png","quartz_block_side.png"}},
 	[156] = {STAIR,  "quartz_block",		{"quartz_block_top.png","quartz_block_top.png","quartz_block_side.png"}},
-	[157] = {NORMAL,"default:rail",            	"rail_activator.png"},
+	[157] = {RAIL,   "mccompat:activator_rail",	"rail_activator.png",
+		mccompat_typ_rail},
 	[158] = {FACEDIR,"mccompat:dropper",		{"dropper_front_vertical.png","dropper_front_vertical.png","dropper_front_horizontal.png"}},
 	[159] = {SELECT,{
 		 [0] = {"mccompat:stained_clay_white",	"hardened_clay_stained_white.png"},
@@ -832,7 +839,7 @@ local blocks_and_textures = {
 --	[166] = {TODO, "mccompat:barrier",			"Barrier_TODO.png"},
 	[167] = {TRAPDOOR, "iron",			"iron_trapdoor.png"},
 	[168] = {SELECT,{
-		[0] = {"mccompat:prismarine",		"prismarine.png"},
+		[0] = {"mccompat:prismarine",		"prismarine_rough.png"},
 		[1] = {"mccompat:prismarine_bricks",	"prismarine_bricks.png"},
 		[2] = {"mccompat:prismarine_dark",	"prismarine_dark.png"},
 		}},
@@ -908,7 +915,7 @@ local blocks_and_textures = {
 		[0] = {"red_sandstone",			{"red_sandstone_top.png","red_sandstone_bottom.png","red_sandstone_normal.png"}},
 		[8] = {"red_sandstoneupside_down",	{"red_sandstone_top.png","red_sandstone_bottom.png","red_sandstone_normal.png"}},
 		}},
-	[183] = {GATE,  "planks_spruce",	"planks_spruceSpruce_Fence_Gate_Closed_TODO.png"},
+	[183] = {GATE,  "planks_spruce",	"planks_spruce.png"},
 	[184] = {GATE,  "planks_birch",		"planks_birch.png"},
 	[185] = {GATE,  "planks_jungle",	"planks_jungle.png"},
 	[186] = {GATE,  "planks_dark_oak",	"planks_big_oak.png"},
@@ -1108,6 +1115,19 @@ for i,v in pairs(blocks_and_textures) do
 		elseif( typ==WALL ) then
 			xconnected.register_wall( mc_node_name, mc_node_tiles );
 			new_list[j] = mc_node_name.."_c4";
+
+		elseif( typ==RAIL ) then
+			local add_defs = {
+				inventory_image = mc_node_tiles,
+				wield_image     = mc_node_tiles
+			};
+			local tiles_rail = {
+				mc_node_tiles,
+				"default_rail_curved.png",
+				mc_node_tiles.."^default_rail_curved.png",
+				mc_node_tiles.."^[transform1^"..mc_node_tiles
+			};
+			mc_add_node( mc_node_name, mccompat_typ_rail, add_defs, tiles_rail );
 		end
 
 		blocknames[i].list = new_list;
