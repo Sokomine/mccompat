@@ -51,3 +51,5 @@ Features:
 * doors are placed correctly
 * double plants are handled (sunflowers only to a degree)
 * trapdoors, walls and a lot of other nodes are handled
+
+License: GPLv3
