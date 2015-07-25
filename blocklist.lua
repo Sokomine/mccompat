@@ -1,11 +1,12 @@
 
-local SHADE = "77AB2F:64";
-SHADE = "66CC11:128"; --96";
+--local SHADE_GRASS = "77AB2F:64";
+local SHADE_GRASS   = "66CC11:128"; --96";
+local SHADE_FOILAGE = SHADE_GRASS;
 
-local TEXTURE_GRASS      = "grass_top.png^[colorize:#"..SHADE;
+local TEXTURE_GRASS      = "grass_top.png^[colorize:#"..SHADE_GRASS;
 -- for the grass side,  grass_side_overlay.png plus colorization might be used
 local TEXTURE_GRASS_SIDE = "grass_side.png";
-local TEXTURE_FOILAGE = "^[colorize:#"..SHADE;
+local TEXTURE_FOILAGE = "^[colorize:#"..SHADE_FOILAGE;
 local TEXTURE_LEAVES  = TEXTURE_FOILAGE;
 
 -- unused textures which would need colorization:
