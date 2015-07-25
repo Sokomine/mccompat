@@ -6,8 +6,10 @@ For more information and discussion, please consult
 To be used with
 	https://github.com/Sokomine/handle_schematics/
 for actually placing the schematics in a Minetest world.
+
 In order to get the walls working, use
 	https://github.com/Sokomine/xconnected/
+
 Documentation and discussion about xconnected takes place here:
 	https://forum.minetest.net/viewtopic.php?f=9&t=12882
 
@@ -19,13 +21,19 @@ the values for SHADE_GRASS and/or SHADE_FOILAGE at the top of
 the file blocklist.lua
 
 If you want to use this in combination with another converter:
+[code]
 	mccompat.findMC2MTConversion(
 		blockid, blockdata,
 		blockid2, blockdata2)
+[/code]
 does the actual translation. The function will usually return
+[code]
 	{ new_node_name, new_node_param2 }
+[/code]
 In some cases (doors, double plants), it will return
+[code]
 	{ nil, nil,  y_offset }
+[/code]
 This means that the node type and facedir cannot be decided
 without further information - namely, blockid2 and blockdata2,
 which describe the node at y+y_offset (usually 1 below).
